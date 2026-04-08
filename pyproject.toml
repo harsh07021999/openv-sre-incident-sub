@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openenv-sre-incident-sim"
+version = "0.1.0"
+description = "SRE Incident Response Simulator environment for OpenEnv"
+requires-python = ">=3.10"
+dependencies = [
+    # Core OpenEnv runtime (provides FastAPI server + HTTP client types)
+    "openenv-core[core]>=0.2.2",
+    # Environment-specific dependencies
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "httpx>=0.27.0",
+]
+
+[project.scripts]
+# Server entry point — enables: uv run --project . server
+server = "sre_incident_sim.server.app:main"
+
+[tool.setuptools]
+include-package-data = true
+packages = ["sre_incident_sim", "sre_incident_sim.server"]
+package-dir = { "sre_incident_sim" = ".", "sre_incident_sim.server" = "server" }
