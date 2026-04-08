@@ -34,6 +34,9 @@ ARG ENV_NAME=sre-incident-sim
 COPY . /app/env
 WORKDIR /app/env
 
+# Enable the built-in OpenEnv Web UI
+ENV ENABLE_WEB_INTERFACE=true
+
 # Ensure uv is available
 RUN if ! command -v uv >/dev/null 2>&1; then \
         curl -LsSf https://astral.sh/uv/install.sh | sh && \
