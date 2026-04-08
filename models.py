@@ -5,10 +5,11 @@ Defines the typed Action and Observation Pydantic models that agents
 interact with when responding to production incidents.
 """
 
+import json
 from typing import Any, Dict, List, Literal
 
+from pydantic import Field, model_validator
 from openenv.core.env_server.types import Action, Observation
-from pydantic import Field
 
 
 class SREAction(Action):
@@ -47,6 +48,18 @@ class SREAction(Action):
             "Others: {}."
         ),
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def parse_parameters(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            params = data.get("parameters")
+            if isinstance(params, str):
+                try:
+                    data["parameters"] = json.loads(params)
+                except json.JSONDecodeError:
+                    pass
+        return data
 
 
 class SREObservation(Observation):
