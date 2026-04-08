@@ -2,7 +2,7 @@
 title: SRE Incident Response Simulator
 emoji: 🚨
 colorFrom: red
-colorTo: orange
+colorTo: green
 sdk: docker
 pinned: false
 app_port: 8000
