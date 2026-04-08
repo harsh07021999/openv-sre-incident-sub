@@ -60,13 +60,22 @@ app = create_app(
 )
 
 
-def main(host: str = "0.0.0.0", port: int = 8000):
+def main(host: str = "0.0.0.0", port: int = 8000, **kwargs):
+    """
+    OpenEnv's runner requires a callable main() that can handle 
+    host/port arguments passed by the orchestration layer.
+    """
     import uvicorn
-    uvicorn.run(app, host=host, port=port)
+    # Use kwargs.get to ensure we respect what the orchestrator provides
+    actual_host = kwargs.get("host", host)
+    actual_port = kwargs.get("port", port)
+    uvicorn.run(app, host=actual_host, port=actual_port)
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
+    parser.add_argument("--host", type=str, default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
-    main(port=args.port)
+    # Call main using keyword arguments to match what the deployer expects
+    main(host=args.host, port=args.port)
