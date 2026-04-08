@@ -38,9 +38,9 @@ from server.environment import SREIncidentEnvironment  # noqa: E402
 from server.scenarios import TASK_NAMES                # noqa: E402
 
 # ── Configuration ─────────────────────────────────────────────────────────────
-API_KEY: Optional[str] = os.getenv("HF_TOKEN") or os.getenv("OPENAI_API_KEY")
-API_BASE_URL: str = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
-MODEL_NAME: str = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
+MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
+HF_TOKEN = os.getenv("HF_TOKEN")
 
 BENCHMARK: str = "sre-incident-sim"
 TASKS: List[str] = TASK_NAMES          # ["memory-leak-easy", "latency-spike-medium", "cascading-failure-hard"]
@@ -300,14 +300,14 @@ def run_task(client: OpenAI, task_name: str) -> float:
 # ── Entry point ────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    if not API_KEY:
+    if not HF_TOKEN:
         print(
-            "[ERROR] No API key found. Set HF_TOKEN or OPENAI_API_KEY environment variable.",
+            "[ERROR] No API key found. Set HF_TOKEN environment variable.",
             flush=True,
         )
         sys.exit(1)
 
-    client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY)
+    client = OpenAI(base_url=API_BASE_URL, api_key=HF_TOKEN)
 
     all_scores: List[float] = []
 
