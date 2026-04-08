@@ -27,6 +27,9 @@ Usage:
     uvicorn server.app:app --host 0.0.0.0 --port 8000 --workers 4
 """
 
+import os
+os.environ['ENABLE_WEB_INTERFACE'] = 'true'
+
 try:
     from openenv.core.env_server.http_server import create_app
 except Exception as e:  # pragma: no cover
